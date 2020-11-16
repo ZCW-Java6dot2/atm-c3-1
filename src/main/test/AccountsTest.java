@@ -1,101 +1,72 @@
+import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.dom.ls.LSOutput;
 
+import java.io.ByteArrayInputStream;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AccountsTest {
 
     @Test
+    public void testAccountsConstructor() {
+        Users givenCurrentActiveUser = new Users("AmandaW", "IloveJUnittesting", 1844);
+        Double givenBalance = 1213.00;
 
+        Accounts newAccount = new Accounts(null, givenCurrentActiveUser, givenBalance);
 
-    //public Users getCurrentActiveUser() {return currentActiveUser;}
+        Users retrievedCurrentActiveUser = newAccount.getCurrentActiveUser();
+        Double retrievedBalance = newAccount.getBalance();
 
-    public void setCurrentActiveUser(Users currentActiveUser) {
-        this.currentActiveUser = currentActiveUser;
+        Assert.assertEquals(givenCurrentActiveUser, retrievedCurrentActiveUser);
+        Assert.assertEquals(givenBalance, retrievedBalance);
+
     }
 
-    public Double getBalance() {
-        return balance;
+
+    @Test
+    public void testGetCurrentActiveUser() {
+        Accounts currentUserAccount = new Accounts(null, null, 0.0);
+        Users newCurrentUser = new Users("AmandaW");
+        Users expectedCurrentUser = currentUserAccount.getCurrentActiveUser();
+        Users actualCurrentUser = currentUserAccount.getCurrentActiveUser();
+
+        Assert.assertEquals(expectedCurrentUser, actualCurrentUser);
     }
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
+    @Test
+    public void testGetBalance() {
+        Accounts newAccount = new Accounts(null, null, 11.40);
+        Double expectedBal = 11.40;
+
+        Double actualBal = newAccount.getBalance();
+
+        Assert.assertEquals(expectedBal, actualBal);
+
     }
 
-    public void runAccountMenuOptions() {
-        boolean powerOn = true;
-        while (ATMConsole.isAtmPowerOn() && powerOn) {
-            System.out.println("\n" +
-                    "Please select from the following options:\n" +
-                    "1 - Checking Account Menu\n" +
-                    "2 - Savings Account Menu\n" +
-                    "3 - Investment Account Menu\n" +
-                    "4 - Open New Account\n" +
-                    "5 - Close an Account\n" +
-                    "6 - Go Back to Primary User Options Menu\n" +
-                    "7 - Cancel Transaction\n" +
-                    "---------------------------------\n" +
-                    "Enter choice here: -> ");
+    @Test
+    public void testRunMenuOptions() {
+        String expectedInput = "1\n1\n500.00\n";
+        String expectedOutput = "Deposit processed. New balance: $500.00";
 
-            try{
-                int input = scanner.nextInt();
-                switch (input) {
-                    case 1:
-                        checking.checkingAccountOptions(currentActiveUser);
-                        break;
-                    case 2:
-                        savings.savingsAccountOptions(currentActiveUser);
-                        break;
-                    case 3:
-                        investment.investmentAccountOptions(currentActiveUser);
-                        break;
-                    case 4:
-                        System.out.println("Please indicate which type of account you would like to create?\n" +
-                                "1 - Checking Account\n" +
-                                "2 - Savings Account\n" +
-                                "3 - Investment Account");
-                        int newAccountChoice = scanner.nextInt();
-                        if (newAccountChoice == 1) {
-                            checking = new Checking(currentActiveUser);
-                            currentActiveUser.setChecking(checking);
-                        } else if (newAccountChoice == 2) {
-                            savings = new Savings(currentActiveUser);
-                            currentActiveUser.setSavings(savings);
-                        } else {
-                            investment = new Investment(currentActiveUser);
-                            currentActiveUser.setInvestment(investment);
-                        }
-                        break;
-                    case 5:
-                        System.out.println("Please indicate which type of account you would like to delete?\n" +
-                                "1 - Checking Account\n" +
-                                "2 - Savings Account\n" +
-                                "3 - Investment Account");
-                        int deleteAccountChoice = scanner.nextInt();
-                        if (deleteAccountChoice == 1) {
-                            currentActiveUser.setChecking(null);
-                        } else if (deleteAccountChoice == 2) {
-                            currentActiveUser.setSavings(null);
-                        } else {
-                            currentActiveUser.setInvestment(null);
-                        }
-                        break;
-                    case 6:
-                        powerOn = false;
-                        break;
-                    case 7:
-                        System.out.println("You have canceled the transaction.\n" +
-                                "Enjoy the rest of your day.");
-                        powerOn = false;
-                        ATMConsole.setAtmPowerOn(false);
-                        break;
-                    default:
-                        System.out.println("\n" + "Incorrect option chosen, please choose one of the menu options below.");
-                        break;
-                }
-
-            } catch (InputMismatchException e) {
-                scanner.next();
-                System.out.println("\n" + "Incorrect option chosen, please choose one of the menu options below.");
-            }
+        System.setIn(new ByteArrayInputStream(expectedInput.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        Users newCheckingUser = new Users();
+        List actualOutput = newCheckingUser.getTransactionHistory(); // this is returning null, not sure how to get the actual output
+        Assert.assertEquals(expectedOutput, actualOutput);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
